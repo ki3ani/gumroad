@@ -99,7 +99,13 @@ export type Option = {
   price_difference_cents: number | null;
   recurrence_price_values:
     | {
-        [key in RecurrenceId]?: { price_cents: number; suggested_price_cents: number | null };
+        [key in RecurrenceId]?: {
+          price_cents: number;
+          suggested_price_cents: number | null;
+          fixed_duration_months?: number | null;
+          duration_display?: string | null;
+          formatted_price_with_duration?: string | null;
+        };
       }
     | null;
   is_pwyw: boolean;
@@ -207,6 +213,7 @@ export const OptionRadioButton = ({
   recurrence,
   product,
   hidePrice,
+  option,
 }: {
   disabled?: boolean;
   selected: boolean;
@@ -222,9 +229,16 @@ export const OptionRadioButton = ({
   recurrence?: RecurrenceId | null;
   product: Product;
   hidePrice?: boolean | undefined;
+  option?: Option;
 }) => {
   priceCents ??= 0;
   const { value: discountedPriceCents } = computeDiscountedPrice(priceCents, discount, product);
+
+  // Get tier-specific duration information
+  const durationInfo = option && recurrence ? option.recurrence_price_values?.[recurrence] : null;
+  const durationDisplay = durationInfo?.duration_display;
+  const hasDuration = durationDisplay && durationDisplay !== "Ongoing";
+
   return (
     <Button
       role="radio"
@@ -254,6 +268,7 @@ export const OptionRadioButton = ({
           })}
           {isPWYW ? "+" : null}
           {recurrence ? ` ${recurrenceLabels[recurrence]}` : null}
+          {hasDuration ? ` for ${durationDisplay}` : null}
           <div itemProp="price" hidden>
             {formatPriceCentsWithoutCurrencySymbolAndComma(currencyCode, discountedPriceCents)}
           </div>
@@ -717,6 +732,7 @@ export const ConfigurationSelector = React.forwardRef<
               recurrence={selection.recurrence}
               product={product}
               hidePrice={hidePrices}
+              option={option}
             />
           ))}
           <div itemProp="offerCount" hidden>

@@ -18,6 +18,7 @@ type Props = {
         duration_in_months: number | null;
       }
     | undefined;
+  formattedPriceWithDuration?: string | undefined;
   isPayWhatYouWant: boolean;
   isSalesLimited: boolean;
   creatorName?: string | undefined;
@@ -30,6 +31,7 @@ export const PriceTag = ({
   oldPrice,
   price,
   recurrence,
+  formattedPriceWithDuration,
   isPayWhatYouWant,
   isSalesLimited,
   creatorName,
@@ -49,9 +51,13 @@ export const PriceTag = ({
           <s>{formatPriceCentsWithCurrencySymbol(currencyCode, oldPrice, { symbolFormat: "long" })}</s>{" "}
         </>
       ) : null}
-      {formattedAmount}
-      {isPayWhatYouWant ? "+" : null}
-      {recurrenceLabel ? ` ${recurrenceLabel}` : null}
+      {formattedPriceWithDuration || (
+        <>
+          {formattedAmount}
+          {isPayWhatYouWant ? "+" : null}
+          {recurrenceLabel ? ` ${recurrenceLabel}` : null}
+        </>
+      )}
     </>
   );
   const tooltipUid = React.useId();

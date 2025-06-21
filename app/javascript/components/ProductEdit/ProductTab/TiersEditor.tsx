@@ -258,16 +258,40 @@ const TierEditor = ({
                   aria-label={`Toggle recurrence option: ${recurrenceNames[recurrence]}`}
                   onChange={() => updateRecurrencePriceValue(recurrence, { enabled: !value.enabled })}
                 />
-                <PriceInput
-                  id={`${uid}-price`}
-                  currencyCode={currencyType}
-                  cents={value.price_cents ?? null}
-                  onChange={(price_cents) => updateRecurrencePriceValue(recurrence, { price_cents })}
-                  placeholder={PLACEHOLDER_VALUES[recurrence]}
-                  suffix={perRecurrenceLabels[recurrence]}
-                  disabled={!value.enabled}
-                  ariaLabel={`Amount ${perRecurrenceLabels[recurrence]}`}
-                />
+                <div style={{ display: "grid", gap: "var(--spacer-2)" }}>
+                  <PriceInput
+                    id={`${uid}-price`}
+                    currencyCode={currencyType}
+                    cents={value.price_cents ?? null}
+                    onChange={(price_cents) => updateRecurrencePriceValue(recurrence, { price_cents })}
+                    placeholder={PLACEHOLDER_VALUES[recurrence]}
+                    suffix={perRecurrenceLabels[recurrence]}
+                    disabled={!value.enabled}
+                    ariaLabel={`Amount ${perRecurrenceLabels[recurrence]}`}
+                  />
+                  {value.enabled ? (
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--spacer-2)" }}>
+                      <NumberInput
+                        onChange={(fixed_duration_months) =>
+                          updateRecurrencePriceValue(recurrence, { fixed_duration_months })
+                        }
+                        value={value.enabled ? (value.fixed_duration_months ?? null) : null}
+                      >
+                        {(inputProps) => (
+                          <input type="number" placeholder="Duration (months)" min="1" {...inputProps} />
+                        )}
+                      </NumberInput>
+                      <input
+                        type="text"
+                        placeholder="Display name (e.g., '1 year')"
+                        value={value.enabled ? value.duration_display_name || "" : ""}
+                        onChange={(evt) =>
+                          updateRecurrencePriceValue(recurrence, { duration_display_name: evt.target.value })
+                        }
+                      />
+                    </div>
+                  ) : null}
+                </div>
               </div>
             ))}
           </fieldset>

@@ -612,6 +612,7 @@ class LinksController < ApplicationController
     def update_variants
       variant_category = @product.variant_categories_alive.first
       variants = product_permitted_params[:variants] || []
+      
       if variants.any? || @product.is_tiered_membership?
         variant_category_params = variant_category.present? ?
           {

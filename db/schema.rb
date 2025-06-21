@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_25_212934) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_21_125957) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name", limit: 191, null: false
     t.string "record_type", limit: 191, null: false
@@ -1352,6 +1352,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_25_212934) do
     t.integer "flags", default: 0, null: false
     t.integer "variant_id"
     t.integer "suggested_price_cents"
+    t.integer "fixed_duration_months"
+    t.string "duration_display_name"
+    t.index ["fixed_duration_months"], name: "index_prices_on_fixed_duration_months"
     t.index ["link_id"], name: "index_prices_on_link_id"
     t.index ["variant_id"], name: "index_prices_on_variant_id"
   end
